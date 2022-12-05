@@ -12,14 +12,3 @@ provider "namep" {
   default_nodash_name_format   = "#{SLUG}#{TOKEN_1}#{TOKEN_2}#{SHORT_LOC}#{NAME}"
   default_resource_name_format = "#{SLUG}-#{TOKEN_1}-#{TOKEN_2}-#{SHORT_LOC}-#{NAME}"
 }
-
-data "namep_azure_name" "rg" {
-  name     = "main"
-  location = "westeurope"
-  type     = "azurerm_resource_group"
-}
-
-resource "azurerm_resource_group" "rg" {
-  name     = data.namep_azure_name.rg.result
-  location = "West Europe"
-}
