@@ -5,5 +5,11 @@
    vmImage: 'ubuntu-latest'
 
  steps:
- - bash: |
-     echo "pipeline complete"
+   - template: terraform.yml
+     parameters:
+       terraformVersion: 1.3.6
+       terraformPath: terraform
+       servicePrinciple: petteri-test-sub
+       containerName: terraform
+       storageAccountName: samobitf
+       resourceGroupName: terraformstate-rg
