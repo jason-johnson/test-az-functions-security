@@ -1,0 +1,191 @@
+# REQUIREMENTS: none
+# OPTIONAL GLOBAL VARIABLES:
+#   Container - name of the container your terraform config is stored
+#   StorageAccount - name of the storage account your terraform config is stored
+#   ResourceGroupName - name of the resource group your terraform config storage account is in
+# OUTPUTS:
+#  TerraformApply.outputs['Terraform.$output']
+#     These are created for each of your terraform main outputs, using the terraform output name
+parameters:
+  - name: terraformVersion
+  - name: terraformPath
+  - name: servicePrinciple
+  - name: containerName
+    default: $(Container)
+  - name: storageAccountName
+    default: $(StorageAccount)
+  - name: resourceGroupName
+    default: $(ResourceGroupName)
+  - name: action
+    default: 'apply'
+  - name: commandOptions
+    default: ''
+  - name: useWorkspace
+    default: false
+  - name: workspace
+    default: ''
+  - name: preActionSteps
+    type: stepList
+    default: []
+  - name: preDestroySteps
+    type: stepList
+    default: []
+  - name: secrets
+    type: object
+    default: []
+  - name: env
+    type: object
+    default: []
+
+steps:
+  - task: charleszipp.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-installer.TerraformInstaller@0
+    displayName: Install Terraform
+    inputs:
+      terraformVersion: ${{ parameters.terraformVersion }}
+  
+  - task: TerraformCLI@0
+    displayName: 'terraform init'
+    inputs:
+      command: init
+      backendType: azurerm
+      backendServiceArm: ${{ parameters.servicePrinciple }}
+      backendAzureRmResourceGroupName: ${{ parameters.resourceGroupName }}
+      backendAzureRmStorageAccountName: ${{ parameters.storageAccountName }}
+      backendAzureRmContainerName: ${{ parameters.containerName }}
+      backendAzureRmKey: terraform.tfstate
+      runAzLogin: true
+      workingDirectory: ${{ parameters.terraformPath }}
+
+  - ${{ if eq(parameters.useWorkspace, true) }}:
+    - task: TerraformCLI@0
+      displayName: Create Workspace
+      inputs:
+        workingDirectory: ${{ parameters.terraformPath }}
+        command: workspace
+        workspaceSubCommand: new
+        workspaceName: ${{ parameters.workspace }}
+        skipExistingWorkspace: true
+
+    - task: TerraformCLI@0
+      displayName: Select Workspace
+      inputs:
+        workingDirectory: ${{ parameters.terraformPath }}
+        command: workspace
+        workspaceSubCommand: select
+        workspaceName: ${{ parameters.workspace }}
+
+  - ${{ if or(gt(length(parameters.preDestroySteps), 0), gt(length(parameters.preActionSteps), 0)) }}:
+    - task: TerraformCLI@0
+      displayName: 'terraform output'
+      inputs:
+        command: output
+        environmentServiceName: ${{ parameters.servicePrinciple }}
+        workingDirectory: ${{ parameters.terraformPath }}
+
+  - ${{ each step in parameters.preActionSteps }}:
+    - ${{ each pair in step }}:
+        ${{ pair.key }}: ${{ pair.value }}
+      env:
+        ${{ each secret in parameters.secrets }}:
+          TF_VAR_${{ secret }}: $(${{ secret }})
+        ${{ each e in parameters.env }}:
+          ${{ e.key }}: ${{ e.value }}
+
+  - ${{ if and(eq(parameters.action, 'destroy'), gt(length(parameters.preDestroySteps), 0)) }}:
+    - ${{ each step in parameters.preDestroySteps }}:
+      - ${{ each pair in step }}:
+          ${{ pair.key }}: ${{ pair.value }}
+
+  - ${{ if and(ne(parameters.action, 'apply'), ne(parameters.action, 'output')) }}:
+    - task: TerraformCLI@0
+      displayName: 'terraform ${{ parameters.action }}'
+      inputs:
+        command: ${{ parameters.action }}
+        environmentServiceName: ${{ parameters.servicePrinciple }}
+        runAzLogin: true
+        workingDirectory: ${{ parameters.terraformPath }}
+        commandOptions: ${{ parameters.commandOptions }}
+      env:
+        ${{ each secret in parameters.secrets }}:
+          TF_VAR_${{ secret }}: $(${{ secret }})
+        ${{ each pair in parameters.env }}:
+          ${{ pair.key }}: ${{ pair.value }}
+
+  - ${{ if and(eq(parameters.action, 'destroy'), eq(parameters.useWorkspace, true)) }}:
+    - task: TerraformCLI@0
+      displayName: Select Workspace
+      inputs:
+        workingDirectory: ${{ parameters.terraformPath }}
+        command: workspace
+        workspaceSubCommand: select
+        workspaceName: 'default'
+
+# TODO: TerraformCli does not support deleting a workspace, when it does replace this with the task
+    - powershell: |
+        terraform workspace delete ${{ parameters.workspace }}
+      displayName: Destroy Workspace
+      workingDirectory: ${{ parameters.terraformPath }}
+
+  - ${{ if eq(parameters.action, 'apply') }}:
+    - task: TerraformCLI@0
+      displayName: 'terraform plan'
+      inputs:
+        command: plan
+        environmentServiceName: ${{ parameters.servicePrinciple }}
+        runAzLogin: true
+        workingDirectory: ${{ parameters.terraformPath }}
+        commandOptions: '${{ parameters.commandOptions }} -out=$(System.DefaultWorkingDirectory)/terraform.tfplan -detailed-exitcode'
+        publishPlanResults: 'sds'
+      env:
+        ${{ each secret in parameters.secrets }}:
+          TF_VAR_${{ secret }}: $(${{ secret }})
+        ${{ each pair in parameters.env }}:
+          ${{ pair.key }}: ${{ pair.value }}
+
+    # TODO: This is only needed because there is currently a bug in the show command for TerraformCLI.  What that is fixed replace this with it
+    - powershell: |
+        $plan = terraform show -json $(System.DefaultWorkingDirectory)/terraform.tfplan | ConvertFrom-Json
+
+        foreach ($resourceChange in $plan.resource_changes) {
+          if  ($resourceChange.change.actions.Contains("delete")) {
+            Write-Host "##vso[task.setvariable variable=TERRAFORM_PLAN_HAS_DESTROY_CHANGES]$true"
+            Write-Host "Destroy detected!"
+          }
+        }
+      displayName: terraform show
+      workingDirectory: ${{ parameters.terraformPath }}
+
+    - ${{ each step in parameters.preDestroySteps }}:
+      - ${{ each pair in step }}:
+          ${{ pair.key }}: ${{ pair.value }}
+        condition: and(succeeded(), eq(variables['TERRAFORM_PLAN_HAS_DESTROY_CHANGES'], 'true'))
+
+    - task: TerraformCLI@0
+      displayName: 'terraform apply'
+      condition: and(succeeded(), eq(variables['TERRAFORM_PLAN_HAS_CHANGES'], 'true'))
+      inputs:
+        command: apply
+        environmentServiceName: ${{ parameters.servicePrinciple }}
+        runAzLogin: true
+        workingDirectory: ${{ parameters.terraformPath }}
+        commandOptions: '$(System.DefaultWorkingDirectory)/terraform.tfplan'
+
+  - ${{ if or(eq(parameters.action, 'apply'), eq(parameters.action, 'output')) }}:
+    - task: TerraformCLI@0
+      displayName: 'terraform output'
+      inputs:
+        command: output
+        environmentServiceName: ${{ parameters.servicePrinciple }}
+        workingDirectory: ${{ parameters.terraformPath }}
+
+# TODO: terraform output currently has a bug that variables it produces are not passed to other jobs
+# TODO:  When that bug is fixed, remove the below
+    - powershell: |
+        $vars = Get-ChildItem Env:* | select Name,Value | where Name -like "TF_OUT_*"
+        foreach ($var in $vars) {
+          $name = ($var.Name -replace "^TF_OUT_").ToLower() 
+          Write-Host "##vso[task.setvariable variable=$name;isOutput=true]$($var.Value)"
+          Write-Host "[task.setvariable variable=$name;isOutput=true;]$($var.Value)"
+        }
+      name: Terraform
+      displayName: Set Outputs
