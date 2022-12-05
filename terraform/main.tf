@@ -3,7 +3,7 @@ terraform {
 }
 
 provider "azurerm" {
-  feature {}
+  features {}
 }
 
 provider "namep" {
