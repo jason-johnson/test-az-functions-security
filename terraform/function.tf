@@ -27,7 +27,7 @@ resource "azurerm_linux_function_app" "main" {
 resource "azurerm_function_app_function" "example" {
   name            = "http-trigger-test"
   function_app_id = azurerm_linux_function_app.main.id
-  language        = "Node"
+  language        = "TypeScript"
   test_data = jsonencode({
     "name" = "Azure"
   })
