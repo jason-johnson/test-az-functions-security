@@ -13,7 +13,7 @@ output "sp_name" {
   value       = azurerm_service_plan.main.name
 }
 
-#output "fun_name" {
-#  description = "Name of project azure function app"
-#  value       = azurerm_linux_function_app.main.name
-#}
+output "fun_name" {
+  description = "Name of project azure function app"
+  value       = azurerm_linux_function_app.main.name
+}
