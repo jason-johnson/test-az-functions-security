@@ -14,7 +14,7 @@ provider "namep" {
 }
 
 data "namep_azure_name" "rg" {
-  name     = "test"
+  name     = "main"
   location = "westeurope"
   type     = "azurerm_resource_group"
 }
