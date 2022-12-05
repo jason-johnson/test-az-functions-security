@@ -25,7 +25,7 @@ resource "azurerm_storage_account" "main" {
 data "namep_azure_name" "sp" {
   name     = "main"
   location = "westeurope"
-  type     = "azurerm_service_plan"
+  type     = "azurerm_app_service_plan"
 }
 
 resource "azurerm_service_plan" "main" {
@@ -39,7 +39,7 @@ resource "azurerm_service_plan" "main" {
 data "namep_azure_name" "fun" {
   name     = "main"
   location = "westeurope"
-  type     = "azurerm_linux_function_app"
+  type     = "azurerm_function_app"
 }
 
 resource "azurerm_linux_function_app" "main" {
