@@ -58,7 +58,7 @@ data "namep_azure_name" "eh" {
 
 resource "azurerm_eventhub" "main" {
   name                = data.namep_azure_name.eh.result
-  namespace_name      = azurerm_eventhub_namespace.rg.name
+  namespace_name      = azurerm_eventhub_namespace.main.name
   resource_group_name = azurerm_resource_group.rg.name
   partition_count     = 2
   message_retention   = 1
