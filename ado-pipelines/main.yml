@@ -1,0 +1,9 @@
+ trigger:
+ - *
+
+ pool:
+   vmImage: 'ubuntu-latest'
+
+ steps:
+ - bash: |
+     echo "pipeline complete"
