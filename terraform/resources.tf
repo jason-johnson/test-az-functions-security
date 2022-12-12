@@ -22,17 +22,6 @@ resource "azurerm_storage_account" "main" {
   account_replication_type = "LRS"
 }
 
-data "namep_azure_name" "sq" {
-  name     = "main"
-  location = "westeurope"
-  type     = "azurerm_storage_queue"
-}
-
-resource "azurerm_storage_queue" "main" {
-  name                 = data.namep_azure_name.sq.result
-  storage_account_name = azurerm_storage_account.main.name
-}
-
 data "namep_azure_name" "sp" {
   name     = "main"
   location = "westeurope"
@@ -66,7 +55,7 @@ resource "azurerm_eventgrid_system_topic" "main" {
 }
 
 data "namep_azure_name" "egsts" {
-  name     = "main"
+  name     = "funsa"
   location = "westeurope"
   type     = "azurerm_eventgrid_system_topic_event_subscription"
 }
@@ -76,8 +65,7 @@ resource "azurerm_eventgrid_system_topic_event_subscription" "main" {
   system_topic        = azurerm_eventgrid_system_topic.main.name
   resource_group_name = azurerm_resource_group.rg.name
 
-  storage_queue_endpoint {
-    storage_account_id = azurerm_storage_account.main.id
-    queue_name         = azurerm_storage_queue.main.name
+  azure_function_endpoint {
+    function_id = "${azurerm_linux_function_app.main.id}/functions/event-grid-example"
   }
 }
