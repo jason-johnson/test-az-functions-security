@@ -63,3 +63,15 @@ resource "azurerm_eventhub" "main" {
   partition_count     = 2
   message_retention   = 1
 }
+
+data "namep_azure_name" "egt" {
+  name     = "main"
+  location = "westeurope"
+  type     = "azurerm_eventhub"
+}
+
+resource "azurerm_eventgrid_topic" "main" {
+  name                = data.namep_azure_name.egt.result
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+}
