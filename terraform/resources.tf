@@ -76,4 +76,8 @@ resource "azurerm_eventgrid_system_topic" "main" {
   location               = azurerm_resource_group.rg.location
   source_arm_resource_id = azurerm_storage_account.main.id
   topic_type             = "Microsoft.Storage.StorageAccounts"
+
+  identity {
+    type = "SystemAssigned"
+  }
 }
