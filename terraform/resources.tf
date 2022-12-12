@@ -36,34 +36,6 @@ resource "azurerm_service_plan" "main" {
   sku_name            = "Y1"
 }
 
-data "namep_azure_name" "ns" {
-  name     = "main"
-  location = "westeurope"
-  type     = "azurerm_eventhub_namespace"
-}
-
-resource "azurerm_eventhub_namespace" "main" {
-  name                = data.namep_azure_name.ns.result
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-  sku                 = "Standard"
-  capacity            = 1
-}
-
-data "namep_azure_name" "eh" {
-  name     = "main"
-  location = "westeurope"
-  type     = "azurerm_eventhub"
-}
-
-resource "azurerm_eventhub" "main" {
-  name                = data.namep_azure_name.eh.result
-  namespace_name      = azurerm_eventhub_namespace.main.name
-  resource_group_name = azurerm_resource_group.rg.name
-  partition_count     = 2
-  message_retention   = 1
-}
-
 data "namep_azure_name" "egst" {
   name     = "main"
   location = "westeurope"
