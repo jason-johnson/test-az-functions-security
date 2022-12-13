@@ -1,10 +1,40 @@
 {
-    "name": "terraform.dev",
-    "extensions": [
-        "eamodio.gitlens",
-        "davidanson.vscode-markdownlint",
-        "hashicorp.terraform",
-        "ms-azuretools.vscode-docker"
-    ],
-    "postCreateCommand": "/bin/bash ./.devcontainer/post-install.sh"
+	"name": "Azure CLI",
+	"dockerFile": "Dockerfile",
+	// Configure tool-specific properties.
+	"customizations": {
+		// Configure properties specific to VS Code.
+		"vscode": {
+			// Set *default* container specific settings.json values on container create.
+			"settings": {
+				"terraform.languageServer": {
+					"enabled": true,
+					"args": []
+				},
+				"azureTerraform.terminal": "integrated"
+			},
+			// Add the IDs of extensions you want installed when the container is created.
+			"extensions": [
+				"eamodio.gitlens",
+				"davidanson.vscode-markdownlint",
+				"hashicorp.terraform",
+				"ms-azuretools.vscode-docker",
+				"ms-vscode.azurecli",
+				"ms-azuretools.vscode-azureterraform",
+			]
+		}
+	},
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+	// Use 'postCreateCommand' to run commands after the container is created.
+	// "postCreateCommand": "az --version",
+	// Uncomment when using a ptrace-based debugger like C++, Go, and Rust
+	// "runArgs": [ "--cap-add=SYS_PTRACE", "--security-opt", "seccomp=unconfined" ],
+	// Set `remoteUser` to `root` to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+	"remoteUser": "vscode",
+	"features": {
+		"ghcr.io/devcontainers/features/terraform:1": {},
+		"ghcr.io/stuartleeks/dev-container-features/shell-history:0": {},
+		"ghcr.io/jlaundry/devcontainer-features/azure-functions-core-tools:1": {}
+	}
 }
