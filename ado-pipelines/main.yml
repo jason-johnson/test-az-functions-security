@@ -1,20 +1,14 @@
 trigger:
   - "*"
 
+parameters:
+  - name: salt
+    default: ''
+
 pool:
   vmImage: "ubuntu-latest"
 
 steps:
-  - pwsh: |
-      $name = "$(Build.SourceBranch)" -replace 'refs/heads/'
-
-      if ($name -ne 'main' ) {
-        Write-Host "##vso[task.setvariable variable=TF_VAR_branch;]$name"
-      } else {
-        Write-Host "main branch"
-      }
-    displayName: Check branch name
-
   - template: terraform.yml
     parameters:
       terraformVersion: 1.3.6
@@ -22,5 +16,6 @@ steps:
       servicePrinciple: petteri-test-sub
       containerName: terraform
       storageAccountName: samobitf
-      workspace: $(TF_VAR_branch)
+      workspace: ${{ parameters.salt }}
+      useWorkspace: ${{ ne(parameters.salt, '') }}
       resourceGroupName: terraformstate-rg
