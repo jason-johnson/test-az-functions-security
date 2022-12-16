@@ -5,6 +5,9 @@
    vmImage: 'ubuntu-latest'
 
  steps:
+   - bash: |
+       echo "Branch is $(${{ variables.Build.SourceBranch }})"
+
    - template: terraform.yml
      parameters:
        terraformVersion: 1.3.6
