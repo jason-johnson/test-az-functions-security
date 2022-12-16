@@ -1,20 +1,20 @@
- trigger:
- - '*'
+trigger:
+  - "*"
 
- pool:
-   vmImage: 'ubuntu-latest'
+pool:
+  vmImage: "ubuntu-latest"
 
- steps:
-   - bash: |
-       name=echo "$(Build.SourceBranch)" | cut -d '/' -f3
-       echo "Branch is $name"
-     displayName: Check branch name
+steps:
+  - pwsh: |
+      $name = "$(Build.SourceBranch)" -replace 'refs/heads/'
+      Write-Host "Name was: $name"
+    displayName: Check branch name
 
-   - template: terraform.yml
-     parameters:
-       terraformVersion: 1.3.6
-       terraformPath: terraform
-       servicePrinciple: petteri-test-sub
-       containerName: terraform
-       storageAccountName: samobitf
-       resourceGroupName: terraformstate-rg
+  - template: terraform.yml
+    parameters:
+      terraformVersion: 1.3.6
+      terraformPath: terraform
+      servicePrinciple: petteri-test-sub
+      containerName: terraform
+      storageAccountName: samobitf
+      resourceGroupName: terraformstate-rg
