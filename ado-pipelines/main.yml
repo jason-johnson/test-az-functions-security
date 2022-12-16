@@ -3,7 +3,7 @@ trigger:
 
 parameters:
   - name: salt
-    default: ''
+    default: 'pep'
 
 pool:
   vmImage: "ubuntu-latest"
