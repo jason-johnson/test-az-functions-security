@@ -6,7 +6,8 @@
 
  steps:
    - bash: |
-       echo "Branch is $(Build.SourceBranch)"
+       $name = $(echo $(Build.SourceBranch) | cut -d '/' -f3)
+       echo "Branch is $name"
      displayName: Check branch name
 
    - template: terraform.yml
