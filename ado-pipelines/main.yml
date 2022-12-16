@@ -7,7 +7,6 @@ pool:
 steps:
   - pwsh: |
       $name = "$(Build.SourceBranch)" -replace 'refs/heads/'
-      Write-Host "Name was: $name"
 
       if ($name -ne 'main' ) {
         Write-Host "##vso[task.setvariable variable=TF_VAR_branch;]$name"
