@@ -6,7 +6,8 @@
 
  steps:
    - bash: |
-       echo "Branch is $(${{ variables.Build.SourceBranch }})"
+       echo "Branch is $(Build.SourceBranch)"
+     displayName: Check branch name
 
    - template: terraform.yml
      parameters:
