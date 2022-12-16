@@ -19,3 +19,5 @@ steps:
       workspace: ${{ parameters.salt }}
       useWorkspace: ${{ ne(parameters.salt, '') }}
       resourceGroupName: terraformstate-rg
+      env:
+        TF_VAR_branch: ${{ parameters.salt }}
