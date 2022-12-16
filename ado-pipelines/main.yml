@@ -22,4 +22,5 @@ steps:
       servicePrinciple: petteri-test-sub
       containerName: terraform
       storageAccountName: samobitf
+      workspace: $(TF_VAR_branch)
       resourceGroupName: terraformstate-rg
