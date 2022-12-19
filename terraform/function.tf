@@ -39,7 +39,6 @@ resource "azurerm_linux_function_app" "main" {
 
   service_plan_id               = azurerm_service_plan.main.id
   storage_account_name          = azurerm_storage_account.main.name
-  storage_account_access_key    = azurerm_storage_account.main.primary_access_key
   storage_uses_managed_identity = true
 
   virtual_network_subnet_id = azurerm_subnet.main-function.id
