@@ -34,6 +34,17 @@ resource "azurerm_subnet" "main-function" {
   }
 }
 
+resource "azurerm_network_security_group" "main-default" {
+  name                = data.namep_azure_name.main-default.result
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+}
+
+resource "azurerm_subnet_network_security_group_association" "nsg-a-spoke1" {
+  subnet_id                 = azurerm_subnet.main-default.id
+  network_security_group_id = azurerm_network_security_group.main-default.id
+}
+
 data "namep_azure_name" "pe_function" {
   name     = "fa"
   type     = "azurerm_private_endpoint"
