@@ -1,5 +1,9 @@
 trigger: none
 
+parameters:
+  - name: salt
+    default: 'pep'
+
 pool:
   vmImage: 'ubuntu-latest'
 
@@ -11,5 +15,7 @@ steps:
       servicePrinciple: petteri-test-sub
       containerName: terraform
       storageAccountName: samobitf
+      workspace: ${{ parameters.salt }}
+      useWorkspace: ${{ ne(parameters.salt, '') }}
       resourceGroupName: terraformstate-rg
       action: destroy
