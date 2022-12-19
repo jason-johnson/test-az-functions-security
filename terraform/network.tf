@@ -70,3 +70,10 @@ resource "azurerm_private_dns_a_record" "private_function" {
   ttl                 = 10
   records             = [azurerm_private_endpoint.private_function.private_service_connection[0].private_ip_address]
 }
+
+resource "azurerm_private_dns_zone_virtual_network_link" "main" {
+  name                  = "spoke"
+  resource_group_name   = azurerm_resource_group.rg.name
+  private_dns_zone_name = azurerm_private_dns_zone.private_function.name
+  virtual_network_id    = azurerm_virtual_network.main.id
+}
