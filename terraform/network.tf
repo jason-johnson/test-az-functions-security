@@ -34,6 +34,11 @@ resource "azurerm_subnet" "main-function" {
   }
 }
 
+data "namep_azure_name" "main-default" {
+  name     = "spoke-default"
+  type     = "azurerm_network_security_group"
+}
+
 resource "azurerm_network_security_group" "main-default" {
   name                = data.namep_azure_name.main-default.result
   location            = azurerm_resource_group.rg.location
