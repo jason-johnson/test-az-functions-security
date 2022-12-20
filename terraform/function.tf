@@ -55,7 +55,8 @@ resource "azurerm_linux_function_app" "main" {
   }
 
   auth_settings {
-    enabled = true
+    enabled         = true
+    runtime_version = "~2"
 
     active_directory {
       client_id                  = "c61b5675-2f3b-4d5f-bed9-8d8b3ae06d9e"
