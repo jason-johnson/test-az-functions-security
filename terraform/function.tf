@@ -58,11 +58,10 @@ resource "azurerm_linux_function_app" "main" {
     enabled         = true
     runtime_version = "~2"
 
-    active_directory {
+    microsoft {
       client_id                  = "c61b5675-2f3b-4d5f-bed9-8d8b3ae06d9e"
       client_secret_setting_name = "MICROSOFT_PROVIDER_AUTHENTICATION_SECRET"
     }
-
   }
 
   identity {
