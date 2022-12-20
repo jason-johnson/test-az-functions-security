@@ -2,7 +2,7 @@ trigger: none
 
 parameters:
   - name: salt
-    default: ''
+    default: 'auth'
 
 pool:
   vmImage: 'ubuntu-latest'
