@@ -50,11 +50,27 @@ resource "azurerm_linux_function_app" "main" {
     }
   }
 
+  app_settings = {
+    "MICROSOFT_PROVIDER_AUTHENTICATION_SECRET" = "@Microsoft.KeyVault(SecretUri=https://kv-mobi-test-weu-custom.vault.azure.net/secrets/fa-ad-auth-secret)"
+  }
+
   auth_settings {
     enabled = true
+
+    active_directory {
+      client_id                  = "c61b5675-2f3b-4d5f-bed9-8d8b3ae06d9e"
+      client_secret_setting_name = "MICROSOFT_PROVIDER_AUTHENTICATION_SECRET"
+    }
+
   }
 
   identity {
     type = "SystemAssigned"
+  }
+
+  sticky_settings {
+    app_setting_names = [
+      "MICROSOFT_PROVIDER_AUTHENTICATION_SECRET",
+    ]
   }
 }
