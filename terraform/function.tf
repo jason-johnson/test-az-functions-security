@@ -48,6 +48,10 @@ resource "azurerm_linux_function_app" "main" {
     application_stack {
       node_version = 18
     }
+
+    auth_settings {
+      enabled = true
+    }
   }
 
   identity {
