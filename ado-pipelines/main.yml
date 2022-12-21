@@ -4,6 +4,9 @@ trigger:
 parameters:
   - name: salt
     default: ''
+  - name: useWorkspace
+    default: false
+    type: boolean
 
 pool:
   vmImage: "ubuntu-latest"
@@ -17,7 +20,7 @@ steps:
       containerName: terraform
       storageAccountName: samobitf
       workspace: ${{ parameters.salt }}
-      useWorkspace: ${{ ne(parameters.salt, '') }}
+      useWorkspace: ${{ parameters.useWorkspace }}
       resourceGroupName: terraformstate-rg
       env:
         TF_VAR_branch: ${{ parameters.salt }}
