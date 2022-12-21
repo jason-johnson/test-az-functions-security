@@ -3,6 +3,8 @@ trigger: none
 parameters:
   - name: salt
     default: ''
+  - name: useWorkspace
+    default: false
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -16,6 +18,6 @@ steps:
       containerName: terraform
       storageAccountName: samobitf
       workspace: ${{ parameters.salt }}
-      useWorkspace: ${{ ne(parameters.salt, '') }}
+      useWorkspace: ${{ parameters.useWorkspace }}
       resourceGroupName: terraformstate-rg
       action: destroy
