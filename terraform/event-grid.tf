@@ -42,8 +42,7 @@ data "namep_azure_name" "eges" {
 
 resource "azurerm_eventgrid_event_subscription" "main" {
   name  = data.namep_azure_name.eges.result
-  scope = azurerm_resource_group.rg.id
-
+  scope = azurerm_eventgrid_system_topic.main.id
   azure_function_endpoint {
     max_events_per_batch              = 1
     preferred_batch_size_in_kilobytes = 64
