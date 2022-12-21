@@ -1,3 +1,11 @@
+resource "azurerm_service_plan" "main" {
+  name                = data.namep_azure_name.sp.result
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  os_type             = "Linux"
+  sku_name            = "EP1"
+}
+
 data "namep_azure_name" "ws" {
   name     = "main"
   location = "westeurope"
