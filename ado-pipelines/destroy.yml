@@ -5,6 +5,7 @@ parameters:
     default: ''
   - name: useWorkspace
     default: false
+    type: boolean
 
 pool:
   vmImage: 'ubuntu-latest'
