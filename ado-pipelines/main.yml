@@ -17,7 +17,6 @@ steps:
       containerName: terraform
       storageAccountName: samobitf
       workspace: ${{ parameters.salt }}
-      useWorkspace: ${{ parameters.useWorkspace }}
       resourceGroupName: terraformstate-rg
       env:
         TF_VAR_branch: ${{ parameters.salt }}
