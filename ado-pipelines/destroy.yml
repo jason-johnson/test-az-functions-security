@@ -12,7 +12,7 @@ variables:
   - name: saltVar
     ${{ if eq(parameters.useWorkspace, true) }}:
       value: ${{ parameters.salt }}
-    ${{ else }}
+    ${{ else }}:
       value: ''
 
 pool:
