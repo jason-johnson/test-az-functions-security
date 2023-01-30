@@ -27,7 +27,7 @@ steps:
       servicePrinciple: $(servicePrinciple)
       containerName: $(terraformContainerName)
       storageAccountName: $(terraformStorageAccountName)
-      workspace: ${{ parameters.salt }}
+      workspace: ${{ variables.saltVar }}
       useWorkspace: ${{ parameters.useWorkspace }}
       resourceGroupName: $(terraformResourceGroupName)
       env:
