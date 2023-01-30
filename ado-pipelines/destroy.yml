@@ -9,6 +9,11 @@ parameters:
 
 variables:
   - template: variables.yml
+  - name: saltVar
+    ${{ if eq(parameters.useWorkspace, true) }}:
+      value: ${{ parameters.salt }}
+    ${{ else }}
+      value: ''
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -25,3 +30,5 @@ steps:
       useWorkspace: ${{ parameters.useWorkspace }}
       resourceGroupName: $(terraformResourceGroupName)
       action: destroy
+      env:
+        TF_VAR_branch: ${{ variables.saltVar }}
