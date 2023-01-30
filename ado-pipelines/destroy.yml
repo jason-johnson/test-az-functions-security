@@ -15,7 +15,7 @@ steps:
     parameters:
       terraformVersion: 1.3.6
       terraformPath: terraform
-      servicePrinciple: petteri-test-sub
+      servicePrinciple: MCAPS-Hybrid-REQ-49645-2022-jasojohnson
       containerName: terraform
       storageAccountName: samobitf
       workspace: ${{ parameters.salt }}
