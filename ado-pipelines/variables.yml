@@ -1,0 +1,13 @@
+variables:
+  - name: terraformVersion
+    value: 1.3.6
+  - name: terraformPath
+    value: terraform
+  - name: servicePrinciple
+    value: MCAPS-Hybrid-REQ-49645-2022-jasojohnson
+  - name: terraformContainerName
+    value: terraform-mobi
+  - name: terraformStorageAccountName
+    value: stterraformjasojoh
+  - name: terraformResourceGroupName
+    value: rg-manual
