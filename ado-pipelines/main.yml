@@ -4,6 +4,9 @@ trigger:
 parameters:
   - name: salt
     default: 'auth'
+  - name: useWorkspace
+    default: true
+    type: boolean
 
 variables:
   - template: variables.yml
