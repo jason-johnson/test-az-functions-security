@@ -11,7 +11,7 @@ provider "azurerm" {
 }
 
 provider "namep" {
-  slice_string                 = "MOBI TEST"
+  slice_string                 = "MOBII TEST"
   default_location             = "westeurope"
   default_nodash_name_format   = "#{SLUG}#{TOKEN_1}#{TOKEN_2}#{SHORT_LOC}#{NAME}#{BRANCH}"
   default_resource_name_format = "#{SLUG}-#{TOKEN_1}-#{TOKEN_2}-#{SHORT_LOC}-#{NAME}#{-BRANCH}"
