@@ -19,6 +19,5 @@ steps:
       containerName: $(terraformContainerName)
       storageAccountName: $(terraformStorageAccountName)
       workspace: ${{ parameters.salt }}
-      useWorkspace: ${{ parameters.useWorkspace }}
       resourceGroupName: $(terraformResourceGroupName)
       action: destroy
