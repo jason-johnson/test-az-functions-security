@@ -4,18 +4,21 @@ parameters:
   - name: salt
     default: 'auth'
 
+variables:
+  - template: variables.yml
+
 pool:
   vmImage: 'ubuntu-latest'
 
 steps:
   - template: terraform.yml
     parameters:
-      terraformVersion: 1.3.6
-      terraformPath: terraform
-      servicePrinciple: MCAPS-Hybrid-REQ-49645-2022-jasojohnson
-      containerName: terraform
-      storageAccountName: samobitf
+      terraformVersion: $(terraformVersion)
+      terraformPath: $(terraformPath)
+      servicePrinciple: $(servicePrinciple)
+      containerName: $(terraformContainerName)
+      storageAccountName: $(terraformStorageAccountName)
       workspace: ${{ parameters.salt }}
       useWorkspace: ${{ parameters.useWorkspace }}
-      resourceGroupName: terraformstate-rg
+      resourceGroupName: $(terraformResourceGroupName)
       action: destroy
