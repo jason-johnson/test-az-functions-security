@@ -8,5 +8,8 @@ terraform {
       source  = "jason-johnson/namep"
       version = "~> 1.0"
     }
+    azapi = {
+      source = "Azure/azapi"
+    }
   }
 }

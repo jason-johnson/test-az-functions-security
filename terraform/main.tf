@@ -10,6 +10,8 @@ provider "azurerm" {
   }
 }
 
+provider "azapi" {}
+
 provider "namep" {
   slice_string                 = "MOBII TEST"
   default_location             = "westeurope"
@@ -21,7 +23,7 @@ provider "namep" {
   }
 
   resource_formats = {
-    azurerm_eventgrid_system_topic = "egst-#{TOKEN_1}-#{TOKEN_2}-#{SHORT_LOC}-#{NAME}#{-BRANCH}"
+    azurerm_eventgrid_system_topic                    = "egst-#{TOKEN_1}-#{TOKEN_2}-#{SHORT_LOC}-#{NAME}#{-BRANCH}"
     azurerm_eventgrid_system_topic_event_subscription = "egsts-#{TOKEN_1}-#{TOKEN_2}-#{SHORT_LOC}-#{NAME}#{-BRANCH}"
   }
 }

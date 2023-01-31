@@ -58,20 +58,6 @@ resource "azurerm_linux_function_app" "main" {
     }
   }
 
-  app_settings = {
-    "MICROSOFT_PROVIDER_AUTHENTICATION_SECRET" = "@Microsoft.KeyVault(SecretUri=https://kv-mobi-test-weu-custom.vault.azure.net/secrets/fa-ad-auth-secret)"
-  }
-
-  auth_settings {
-    enabled         = true
-    runtime_version = "~2"
-
-    microsoft {
-      client_id                  = "c61b5675-2f3b-4d5f-bed9-8d8b3ae06d9e"
-      client_secret_setting_name = "MICROSOFT_PROVIDER_AUTHENTICATION_SECRET"
-    }
-  }
-
   identity {
     type = "SystemAssigned"
   }
@@ -81,4 +67,26 @@ resource "azurerm_linux_function_app" "main" {
       "MICROSOFT_PROVIDER_AUTHENTICATION_SECRET",
     ]
   }
+}
+
+resource "azapi_update_resource" "set_forward_proxy" {
+  type        = "Microsoft.Web/sites/config@2020-12-01"
+  resource_id = "${azurerm_linux_function_app.main.id}/config/web"
+
+  body = jsonencode({
+    properties = {
+      siteAuthSettingsV2 = {
+        httpSettings = {
+          requireHttps = true,
+          routes = {
+            apiPrefix = "/.auth"
+          }
+          forwardProxy = {
+            convention           = "Custom"
+            customHostHeaderName = "X-original-host"
+          }
+        }
+      }
+    }
+  })
 }
