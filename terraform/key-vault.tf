@@ -1,5 +1,5 @@
 data "namep_azure_name" "kv" {
-  name     = "main"
+  name     = "m"
   location = azurerm_resource_group.rg.location
   type     = "azurerm_key_vault"
 }
