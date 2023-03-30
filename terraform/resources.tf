@@ -28,7 +28,7 @@ data "namep_azure_name" "sp" {
   type     = "azurerm_app_service_plan"
 }
 
-resource "random_string" "sql_pass" {
+resource "random_password" "sql_pass" {
   length           = 16
   special          = true
   override_special = " {!$#%)"

@@ -28,7 +28,7 @@ resource "azurerm_role_assignment" "sp_officer" {
 
 resource "azurerm_key_vault_secret" "sql-pass" {
   name         = "SQL-Admin-Password"
-  value        = random_string.sql_pass.result
+  value        = random_password.sql_pass.result
   key_vault_id = azurerm_key_vault.main.id
   depends_on = [
     azurerm_role_assignment.sp_admin
