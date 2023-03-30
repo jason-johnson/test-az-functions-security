@@ -2,9 +2,9 @@ trigger: none
 
 parameters:
   - name: salt
-    default: ''
+    default: 'sql'
   - name: useWorkspace
-    default: false
+    default: true
     type: boolean
 
 variables:
