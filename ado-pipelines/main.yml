@@ -3,7 +3,7 @@ trigger:
 
 parameters:
   - name: salt
-    default: ''
+    default: 'sql'
   - name: useWorkspace
     default: false
     type: boolean

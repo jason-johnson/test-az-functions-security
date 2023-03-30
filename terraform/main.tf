@@ -18,7 +18,7 @@ provider "azurerm" {
 data "azurerm_client_config" "current" {}
 
 provider "namep" {
-  slice_string                 = "MOBI DEV"
+  slice_string                 = "MOBI TEST"
   default_location             = "westeurope"
   default_nodash_name_format   = "#{SLUG}#{TOKEN_1}#{TOKEN_2}#{SHORT_LOC}#{NAME}#{BRANCH}"
   default_resource_name_format = "#{SLUG}-#{TOKEN_1}-#{TOKEN_2}-#{SHORT_LOC}-#{NAME}#{-BRANCH}"
