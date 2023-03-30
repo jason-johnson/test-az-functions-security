@@ -10,6 +10,8 @@ provider "azurerm" {
   }
 }
 
+data "azurerm_client_config" "current" {}
+
 provider "namep" {
   slice_string                 = "MOBI TEST"
   default_location             = "westeurope"
