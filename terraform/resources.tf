@@ -27,3 +27,13 @@ data "namep_azure_name" "sp" {
   location = "westeurope"
   type     = "azurerm_app_service_plan"
 }
+
+resource "random_string" "sql_pass" {
+  length           = 16
+  special          = true
+  override_special = " {!$#%)"
+  min_lower = 1
+  min_special = 1
+  min_numeric = 1
+  min_upper = 1
+}
